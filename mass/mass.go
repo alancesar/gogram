@@ -85,7 +85,7 @@ func (m Mass) Ounces() float64 {
 }
 
 func (m Mass) String() (formatted string) {
-	if m.system == measure.ImperialSystem {
+	if m.system == measure.Imperial {
 		return m.imperialString()
 	}
 
@@ -123,7 +123,7 @@ func (m Mass) imperialString() string {
 
 func createFromMetric(grams float64) Mass {
 	return Mass{
-		system: measure.MetricSystem,
+		system: measure.Metric,
 		grams:  grams,
 		pounds: grams / poundsInGrams,
 	}
@@ -131,7 +131,7 @@ func createFromMetric(grams float64) Mass {
 
 func createFromImperial(pounds float64) Mass {
 	return Mass{
-		system: measure.ImperialSystem,
+		system: measure.Imperial,
 		grams:  pounds * poundsInGrams,
 		pounds: pounds,
 	}

@@ -21,7 +21,7 @@ func TestNewFromMilligram(t *testing.T) {
 				value: 1000000.0,
 			},
 			want: Mass{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  1000.0,
 				pounds: 2.2046244201837775,
 			},
@@ -32,7 +32,7 @@ func TestNewFromMilligram(t *testing.T) {
 				value: 453592,
 			},
 			want: Mass{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  453.592,
 				pounds: 1,
 			},
@@ -62,7 +62,7 @@ func TestNewFromGram(t *testing.T) {
 				value: 1000.0,
 			},
 			want: Mass{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  1000.0,
 				pounds: 2.2046244201837775,
 			},
@@ -73,7 +73,7 @@ func TestNewFromGram(t *testing.T) {
 				value: 453.592,
 			},
 			want: Mass{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  453.592,
 				pounds: 1,
 			},
@@ -103,7 +103,7 @@ func TestNewFromKilogram(t *testing.T) {
 				value: 1.0,
 			},
 			want: Mass{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  1000.0,
 				pounds: 2.2046244201837775,
 			},
@@ -114,7 +114,7 @@ func TestNewFromKilogram(t *testing.T) {
 				value: 0.453592,
 			},
 			want: Mass{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  453.592,
 				pounds: 1,
 			},
@@ -144,7 +144,7 @@ func TestNewFromPound(t *testing.T) {
 				value: 1.0,
 			},
 			want: Mass{
-				system: measure.ImperialSystem,
+				system: measure.Imperial,
 				grams:  453.592,
 				pounds: 1,
 			},
@@ -155,7 +155,7 @@ func TestNewFromPound(t *testing.T) {
 				value: 2.20462262185,
 			},
 			want: Mass{
-				system: measure.ImperialSystem,
+				system: measure.Imperial,
 				grams:  999.9991842901852,
 				pounds: 2.20462262185,
 			},
@@ -185,7 +185,7 @@ func TestNewFromOunce(t *testing.T) {
 				value: 1.0,
 			},
 			want: Mass{
-				system: measure.ImperialSystem,
+				system: measure.Imperial,
 				grams:  28.3495,
 				pounds: 0.0625,
 			},
@@ -196,7 +196,7 @@ func TestNewFromOunce(t *testing.T) {
 				value: 35.27396195,
 			},
 			want: Mass{
-				system: measure.ImperialSystem,
+				system: measure.Imperial,
 				grams:  999.999184301525,
 				pounds: 2.204622621875,
 			},
@@ -448,7 +448,7 @@ func TestMass_String(t *testing.T) {
 		{
 			name: "Should print 1.00 g",
 			fields: fields{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  1,
 			},
 			wantFormatted: "1.00 g",
@@ -456,7 +456,7 @@ func TestMass_String(t *testing.T) {
 		{
 			name: "Should print 1.00 kg",
 			fields: fields{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  1000,
 			},
 			wantFormatted: "1.00 kg",
@@ -464,7 +464,7 @@ func TestMass_String(t *testing.T) {
 		{
 			name: "Should print 1 mg",
 			fields: fields{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  0.001,
 			},
 			wantFormatted: "1 mg",
@@ -472,7 +472,7 @@ func TestMass_String(t *testing.T) {
 		{
 			name: "Should print 1 oz",
 			fields: fields{
-				system: measure.ImperialSystem,
+				system: measure.Imperial,
 				pounds: 0.0625,
 			},
 			wantFormatted: "1 oz",
@@ -480,7 +480,7 @@ func TestMass_String(t *testing.T) {
 		{
 			name: "Should print 1 lb",
 			fields: fields{
-				system: measure.ImperialSystem,
+				system: measure.Imperial,
 				pounds: 1,
 			},
 			wantFormatted: "1.00 lb",
@@ -514,7 +514,7 @@ func TestMass_MarshalJSON(t *testing.T) {
 		{
 			name: "Should marshall properly",
 			fields: fields{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				grams:  100,
 			},
 			want:    []byte(`"100.00 g"`),

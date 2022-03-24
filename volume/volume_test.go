@@ -21,7 +21,7 @@ func TestNewFromMilliliter(t *testing.T) {
 				value: 1000.0,
 			},
 			want: Volume{
-				system:  measure.MetricSystem,
+				system:  measure.Metric,
 				liters:  1,
 				gallons: 0.26417205235815002,
 			},
@@ -32,7 +32,7 @@ func TestNewFromMilliliter(t *testing.T) {
 				value: 3785.41,
 			},
 			want: Volume{
-				system:  measure.MetricSystem,
+				system:  measure.Metric,
 				liters:  3.7854099999999997,
 				gallons: 0.9999995287170645,
 			},
@@ -62,7 +62,7 @@ func TestNewFromLiter(t *testing.T) {
 				value: 10,
 			},
 			want: Volume{
-				system:  measure.MetricSystem,
+				system:  measure.Metric,
 				liters:  10,
 				gallons: 2.6417205235815002,
 			},
@@ -73,7 +73,7 @@ func TestNewFromLiter(t *testing.T) {
 				value: 3.78541,
 			},
 			want: Volume{
-				system:  measure.MetricSystem,
+				system:  measure.Metric,
 				liters:  3.78541,
 				gallons: 0.9999995287170647,
 			},
@@ -103,7 +103,7 @@ func TestNewFromGallon(t *testing.T) {
 				value: 1,
 			},
 			want: Volume{
-				system:  measure.ImperialSystem,
+				system:  measure.Imperial,
 				liters:  3.7854117839999772,
 				gallons: 1,
 			},
@@ -114,7 +114,7 @@ func TestNewFromGallon(t *testing.T) {
 				value: 0.26417205235815,
 			},
 			want: Volume{
-				system:  measure.ImperialSystem,
+				system:  measure.Imperial,
 				liters:  1,
 				gallons: 0.26417205235815,
 			},
@@ -216,7 +216,7 @@ func TestVolume_Milliliters(t *testing.T) {
 		{
 			name: "Should return milliliters properly",
 			fields: fields{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				liters: 0.001,
 			},
 			want: 1,
@@ -248,7 +248,7 @@ func TestVolume_Liters(t *testing.T) {
 		{
 			name: "Should return liters properly",
 			fields: fields{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				liters: 1,
 			},
 			want: 1,
@@ -280,7 +280,7 @@ func TestVolume_Gallons(t *testing.T) {
 		{
 			name: "Should return gallons properly",
 			fields: fields{
-				system:  measure.ImperialSystem,
+				system:  measure.Imperial,
 				gallons: 1,
 			},
 			want: 1,
@@ -313,7 +313,7 @@ func TestVolume_String(t *testing.T) {
 		{
 			name: "Should print 1.00 l",
 			fields: fields{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				liters: 1,
 			},
 			want: "1.00 l",
@@ -321,7 +321,7 @@ func TestVolume_String(t *testing.T) {
 		{
 			name: "Should print 1 ml",
 			fields: fields{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				liters: 0.001,
 			},
 			want: "1 ml",
@@ -329,7 +329,7 @@ func TestVolume_String(t *testing.T) {
 		{
 			name: "Should print 1.00 gal",
 			fields: fields{
-				system:  measure.ImperialSystem,
+				system:  measure.Imperial,
 				gallons: 1,
 			},
 			want: "1.00 gal",
@@ -363,7 +363,7 @@ func TestVolume_MarshalJSON(t *testing.T) {
 		{
 			name: "Should marshall properly",
 			fields: fields{
-				system: measure.MetricSystem,
+				system: measure.Metric,
 				liters: 100,
 			},
 			want:    []byte(`"100.00 l"`),

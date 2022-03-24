@@ -1,5 +1,7 @@
 package measure
 
+//go:generate stringer -type=System
+
 import (
 	"encoding/json"
 	"fmt"
@@ -9,8 +11,8 @@ import (
 )
 
 const (
-	MetricSystem System = iota
-	ImperialSystem
+	Metric System = iota
+	Imperial
 
 	valueIndex = 1
 	unitIndex  = 3

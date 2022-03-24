@@ -62,7 +62,7 @@ func (v Volume) Gallons() float64 {
 }
 
 func (v Volume) String() string {
-	if v.system == measure.MetricSystem {
+	if v.system == measure.Metric {
 		return v.metricString()
 	}
 
@@ -93,7 +93,7 @@ func (v Volume) imperialString() string {
 
 func createFromMetric(liters float64) Volume {
 	return Volume{
-		system:  measure.MetricSystem,
+		system:  measure.Metric,
 		liters:  liters,
 		gallons: liters * gallonsInLiters,
 	}
@@ -101,7 +101,7 @@ func createFromMetric(liters float64) Volume {
 
 func createFromImperial(gallons float64) Volume {
 	return Volume{
-		system:  measure.ImperialSystem,
+		system:  measure.Imperial,
 		liters:  gallons / gallonsInLiters,
 		gallons: gallons,
 	}
