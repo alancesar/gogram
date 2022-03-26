@@ -62,10 +62,10 @@ func (t Temperature) Fahrenheit() float64 {
 
 func (t Temperature) String() string {
 	if t.unit == CelsiusUnit {
-		return fmt.Sprintf("%.f%s", t.Celsius(), CelsiusUnit)
+		return fmt.Sprintf("%.0f%s", t.Celsius(), CelsiusUnit)
 	}
 
-	return fmt.Sprintf("%.f%s", t.Fahrenheit(), FahrenheitUnit)
+	return fmt.Sprintf("%.0f%s", t.Fahrenheit(), FahrenheitUnit)
 }
 
 func (t Temperature) MarshalJSON() ([]byte, error) {
