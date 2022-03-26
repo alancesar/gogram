@@ -119,7 +119,7 @@ func (m Mass) Float64In(unit Unit) (float64, error) {
 	case Ounce:
 		return m.Ounces(), nil
 	default:
-		return 0, fmt.Errorf("%s is an invalid unit", unit)
+		return 0, fmt.Errorf("%s is an invalid unit for mass", unit)
 	}
 }
 
