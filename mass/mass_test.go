@@ -446,20 +446,20 @@ func TestMass_String(t *testing.T) {
 		wantFormatted string
 	}{
 		{
-			name: "Should print 1.00 g",
+			name: "Should print 1 g",
 			fields: fields{
 				system: measure.Metric,
 				grams:  1,
 			},
-			wantFormatted: "1.00 g",
+			wantFormatted: "1 g",
 		},
 		{
-			name: "Should print 1.00 kg",
+			name: "Should print 1 kg",
 			fields: fields{
 				system: measure.Metric,
 				grams:  1000,
 			},
-			wantFormatted: "1.00 kg",
+			wantFormatted: "1 kg",
 		},
 		{
 			name: "Should print 1 mg",
@@ -483,7 +483,7 @@ func TestMass_String(t *testing.T) {
 				system: measure.Imperial,
 				pounds: 1,
 			},
-			wantFormatted: "1.00 lb",
+			wantFormatted: "1 lb",
 		},
 	}
 	for _, tt := range tests {
@@ -517,7 +517,7 @@ func TestMass_MarshalJSON(t *testing.T) {
 				system: measure.Metric,
 				grams:  100,
 			},
-			want:    []byte(`"100.00 g"`),
+			want:    []byte(`"100 g"`),
 			wantErr: false,
 		},
 	}
@@ -593,17 +593,17 @@ func TestMass_StringIn(t *testing.T) {
 			args: args{
 				unit: Gram,
 			},
-			want: "1000.00 g",
+			want: "1000 g",
 		},
 		{
-			name: "Should print 2.20 lbs",
+			name: "Should print 2.2 lbs",
 			fields: fields{
-				grams: 1000,
+				grams: 453.592,
 			},
 			args: args{
 				unit: Pound,
 			},
-			want: "2.20 lb",
+			want: "1 lb",
 		},
 		{
 			name: "Should print empty string if receive an invalid unit",

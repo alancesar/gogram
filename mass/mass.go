@@ -21,20 +21,6 @@ const (
 )
 
 var (
-	MilligramPrecision = 0
-	GramPrecision      = 2
-	KilogramPrecision  = 2
-	PoundPrecision     = 2
-	OuncePrecision     = 0
-
-	precisions = map[Unit]*int{
-		Milligram: &MilligramPrecision,
-		Gram:      &GramPrecision,
-		Kilogram:  &KilogramPrecision,
-		Pound:     &PoundPrecision,
-		Ounce:     &OuncePrecision,
-	}
-
 	parsers = measure.ParseMap[Mass]{
 		measure.Unit(Milligram): NewFromMilligram,
 		measure.Unit(Gram):      NewFromGram,
@@ -128,7 +114,7 @@ func (m Mass) StringIn(unit Unit) string {
 	if err != nil {
 		return ""
 	}
-	formatted := numeric.Format(value, *precisions[unit])
+	formatted := numeric.Format(value)
 	return fmt.Sprintf("%s %s", formatted, unit)
 }
 
