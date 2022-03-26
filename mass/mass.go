@@ -3,33 +3,71 @@ package mass
 import (
 	"fmt"
 	"github.com/alancesar/gogram/measure"
+	"strconv"
 )
 
 const (
-	MilligramUnit measure.Unit = "mg"
-	GramUnit      measure.Unit = "g"
-	KilogramUnit  measure.Unit = "kg"
-	PoundUnit     measure.Unit = "lb"
-	OunceUnit     measure.Unit = "oz"
+	MilligramUnit Unit = "mg"
+	GramUnit      Unit = "g"
+	KilogramUnit  Unit = "kg"
+	PoundUnit     Unit = "lb"
+	OunceUnit     Unit = "oz"
 
 	milligramsInGrams = 1000
 	gramsInKilograms  = 1000
 	kilogramsInGrams  = 0.001
 	poundsInGrams     = 453.592
 	poundsInOunces    = 16
+
+	bitSize   = 64
+	formatter = 'f'
 )
 
 var (
+	MilligramPrecision = 0
+	GramPrecision      = 2
+	KilogramPrecision  = 2
+	PoundPrecision     = 2
+	OuncePrecision     = 0
+
+	precisions = map[Unit]*int{
+		MilligramUnit: &MilligramPrecision,
+		GramUnit:      &GramPrecision,
+		KilogramUnit:  &KilogramPrecision,
+		PoundUnit:     &PoundPrecision,
+		OunceUnit:     &OuncePrecision,
+	}
+
 	parsers = measure.ParseMap[Mass]{
-		MilligramUnit: NewFromMilligram,
-		GramUnit:      NewFromGram,
-		KilogramUnit:  NewFromKilogram,
-		PoundUnit:     NewFromPound,
-		OunceUnit:     NewFromOunce,
+		measure.Unit(MilligramUnit): NewFromMilligram,
+		measure.Unit(GramUnit):      NewFromGram,
+		measure.Unit(KilogramUnit):  NewFromKilogram,
+		measure.Unit(PoundUnit):     NewFromPound,
+		measure.Unit(OunceUnit):     NewFromOunce,
+	}
+
+	getters = map[Unit]func(mass Mass) float64{
+		MilligramUnit: func(mass Mass) float64 {
+			return mass.Milligrams()
+		},
+		GramUnit: func(mass Mass) float64 {
+			return mass.Grams()
+		},
+		KilogramUnit: func(mass Mass) float64 {
+			return mass.Kilograms()
+		},
+		PoundUnit: func(mass Mass) float64 {
+			return mass.Pounds()
+		},
+		OunceUnit: func(mass Mass) float64 {
+			return mass.Ounces()
+		},
 	}
 )
 
 type (
+	Unit measure.Unit
+
 	Mass struct {
 		system        measure.System
 		grams, pounds float64
@@ -84,12 +122,19 @@ func (m Mass) Ounces() float64 {
 	return m.pounds * poundsInOunces
 }
 
-func (m Mass) String() (formatted string) {
-	if m.system == measure.Imperial {
-		return m.imperialString()
+func (m Mass) String() string {
+	unit := m.findBestUnit()
+	return m.StringIn(unit)
+}
+
+func (m Mass) StringIn(unit Unit) string {
+	getter, ok := getters[unit]
+	if !ok {
+		return ""
 	}
 
-	return m.metricString()
+	formatted := format(getter(m), *precisions[unit])
+	return fmt.Sprintf("%s %s", formatted, unit)
 }
 
 func (m Mass) MarshalJSON() ([]byte, error) {
@@ -102,23 +147,28 @@ func (m *Mass) UnmarshalJSON(bytes []byte) error {
 	return nil
 }
 
-func (m Mass) metricString() string {
+func (m Mass) findBestUnit() Unit {
+	if m.system == measure.Metric {
+		switch {
+		case m.grams >= gramsInKilograms:
+			return KilogramUnit
+		case m.grams < 1:
+			return MilligramUnit
+		default:
+			return GramUnit
+		}
+	}
+
 	switch {
-	case m.grams >= gramsInKilograms:
-		return fmt.Sprintf("%.2f %s", m.Kilograms(), KilogramUnit)
-	case m.grams < 1:
-		return fmt.Sprintf("%.0f %s", m.Milligrams(), MilligramUnit)
+	case m.pounds < 1:
+		return OunceUnit
 	default:
-		return fmt.Sprintf("%.2f %s", m.Grams(), GramUnit)
+		return PoundUnit
 	}
 }
 
-func (m Mass) imperialString() string {
-	if m.pounds < 1 {
-		return fmt.Sprintf("%.f %s", m.Ounces(), OunceUnit)
-	}
-
-	return fmt.Sprintf("%.2f %s", m.Pounds(), PoundUnit)
+func format(value float64, precision int) string {
+	return strconv.FormatFloat(value, formatter, precision, bitSize)
 }
 
 func createFromMetric(grams float64) Mass {

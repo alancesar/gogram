@@ -571,3 +571,57 @@ func TestMass_UnmarshalJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestMass_StringIn(t *testing.T) {
+	type fields struct {
+		grams float64
+	}
+	type args struct {
+		unit Unit
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "Should print 1000 g",
+			fields: fields{
+				grams: 1000,
+			},
+			args: args{
+				unit: GramUnit,
+			},
+			want: "1000.00 g",
+		},
+		{
+			name: "Should print 2.20 lbs",
+			fields: fields{
+				grams: 1000,
+			},
+			args: args{
+				unit: PoundUnit,
+			},
+			want: "2.20 lb",
+		},
+		{
+			name: "Should print empty string if receive an invalid unit",
+			fields: fields{
+				grams: 1000,
+			},
+			args: args{
+				unit: "Invalid",
+			},
+			want: "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := NewFromGram(tt.fields.grams)
+			if got := m.StringIn(tt.args.unit); got != tt.want {
+				t.Errorf("StringIn() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
