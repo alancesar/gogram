@@ -7,11 +7,11 @@ import (
 )
 
 const (
-	MilligramUnit Unit = "mg"
-	GramUnit      Unit = "g"
-	KilogramUnit  Unit = "kg"
-	PoundUnit     Unit = "lb"
-	OunceUnit     Unit = "oz"
+	Milligram Unit = "mg"
+	Gram      Unit = "g"
+	Kilogram  Unit = "kg"
+	Pound     Unit = "lb"
+	Ounce     Unit = "oz"
 
 	milligramsInGrams = 1000
 	gramsInKilograms  = 1000
@@ -28,37 +28,19 @@ var (
 	OuncePrecision     = 0
 
 	precisions = map[Unit]*int{
-		MilligramUnit: &MilligramPrecision,
-		GramUnit:      &GramPrecision,
-		KilogramUnit:  &KilogramPrecision,
-		PoundUnit:     &PoundPrecision,
-		OunceUnit:     &OuncePrecision,
+		Milligram: &MilligramPrecision,
+		Gram:      &GramPrecision,
+		Kilogram:  &KilogramPrecision,
+		Pound:     &PoundPrecision,
+		Ounce:     &OuncePrecision,
 	}
 
 	parsers = measure.ParseMap[Mass]{
-		measure.Unit(MilligramUnit): NewFromMilligram,
-		measure.Unit(GramUnit):      NewFromGram,
-		measure.Unit(KilogramUnit):  NewFromKilogram,
-		measure.Unit(PoundUnit):     NewFromPound,
-		measure.Unit(OunceUnit):     NewFromOunce,
-	}
-
-	getters = map[Unit]func(mass Mass) float64{
-		MilligramUnit: func(mass Mass) float64 {
-			return mass.Milligrams()
-		},
-		GramUnit: func(mass Mass) float64 {
-			return mass.Grams()
-		},
-		KilogramUnit: func(mass Mass) float64 {
-			return mass.Kilograms()
-		},
-		PoundUnit: func(mass Mass) float64 {
-			return mass.Pounds()
-		},
-		OunceUnit: func(mass Mass) float64 {
-			return mass.Ounces()
-		},
+		measure.Unit(Milligram): NewFromMilligram,
+		measure.Unit(Gram):      NewFromGram,
+		measure.Unit(Kilogram):  NewFromKilogram,
+		measure.Unit(Pound):     NewFromPound,
+		measure.Unit(Ounce):     NewFromOunce,
 	}
 )
 
@@ -124,13 +106,29 @@ func (m Mass) String() string {
 	return m.StringIn(unit)
 }
 
+func (m Mass) Float64In(unit Unit) (float64, error) {
+	switch unit {
+	case Milligram:
+		return m.Milligrams(), nil
+	case Gram:
+		return m.Grams(), nil
+	case Kilogram:
+		return m.Kilograms(), nil
+	case Pound:
+		return m.Pounds(), nil
+	case Ounce:
+		return m.Ounces(), nil
+	default:
+		return 0, fmt.Errorf("%s is an invalid unit", unit)
+	}
+}
+
 func (m Mass) StringIn(unit Unit) string {
-	getter, ok := getters[unit]
-	if !ok {
+	value, err := m.Float64In(unit)
+	if err != nil {
 		return ""
 	}
-
-	formatted := numeric.Format(getter(m), *precisions[unit])
+	formatted := numeric.Format(value, *precisions[unit])
 	return fmt.Sprintf("%s %s", formatted, unit)
 }
 
@@ -148,19 +146,19 @@ func (m Mass) findBestUnit() Unit {
 	if m.system == measure.Metric {
 		switch {
 		case m.grams >= gramsInKilograms:
-			return KilogramUnit
+			return Kilogram
 		case m.grams < 1:
-			return MilligramUnit
+			return Milligram
 		default:
-			return GramUnit
+			return Gram
 		}
 	}
 
 	switch {
 	case m.pounds < 1:
-		return OunceUnit
+		return Ounce
 	default:
-		return PoundUnit
+		return Pound
 	}
 }
 

@@ -591,7 +591,7 @@ func TestMass_StringIn(t *testing.T) {
 				grams: 1000,
 			},
 			args: args{
-				unit: GramUnit,
+				unit: Gram,
 			},
 			want: "1000.00 g",
 		},
@@ -601,7 +601,7 @@ func TestMass_StringIn(t *testing.T) {
 				grams: 1000,
 			},
 			args: args{
-				unit: PoundUnit,
+				unit: Pound,
 			},
 			want: "2.20 lb",
 		},
@@ -621,6 +621,102 @@ func TestMass_StringIn(t *testing.T) {
 			m := NewFromGram(tt.fields.grams)
 			if got := m.StringIn(tt.args.unit); got != tt.want {
 				t.Errorf("StringIn() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMass_Float64In(t *testing.T) {
+	type fields struct {
+		grams float64
+	}
+	type args struct {
+		unit Unit
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    float64
+		wantErr bool
+	}{
+		{
+			name: "Should get 1 g",
+			fields: fields{
+				grams: 1,
+			},
+			args: args{
+				unit: Gram,
+			},
+			want:    1,
+			wantErr: false,
+		},
+		{
+			name: "Should get 1 kg",
+			fields: fields{
+				grams: 1000,
+			},
+			args: args{
+				unit: Kilogram,
+			},
+			want:    1,
+			wantErr: false,
+		},
+		{
+			name: "Should get 1 mg",
+			fields: fields{
+				grams: 0.001,
+			},
+			args: args{
+				unit: Milligram,
+			},
+			want:    1,
+			wantErr: false,
+		},
+		{
+			name: "Should get 1 lb",
+			fields: fields{
+				grams: 453.592,
+			},
+			args: args{
+				unit: Pound,
+			},
+			want:    1,
+			wantErr: false,
+		},
+		{
+			name: "Should get 1 oz",
+			fields: fields{
+				grams: 28.3495,
+			},
+			args: args{
+				unit: Ounce,
+			},
+			want:    1,
+			wantErr: false,
+		},
+		{
+			name: "Should return error for invalid unit",
+			fields: fields{
+				grams: 1000,
+			},
+			args: args{
+				unit: "Invalid",
+			},
+			want:    0,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := NewFromGram(tt.fields.grams)
+			got, err := m.Float64In(tt.args.unit)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Float64In() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("Float64In() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
