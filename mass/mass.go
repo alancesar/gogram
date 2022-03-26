@@ -3,7 +3,7 @@ package mass
 import (
 	"fmt"
 	"github.com/alancesar/gogram/measure"
-	"strconv"
+	"github.com/alancesar/gogram/numeric"
 )
 
 const (
@@ -18,9 +18,6 @@ const (
 	kilogramsInGrams  = 0.001
 	poundsInGrams     = 453.592
 	poundsInOunces    = 16
-
-	bitSize   = 64
-	formatter = 'f'
 )
 
 var (
@@ -133,7 +130,7 @@ func (m Mass) StringIn(unit Unit) string {
 		return ""
 	}
 
-	formatted := format(getter(m), *precisions[unit])
+	formatted := numeric.Format(getter(m), *precisions[unit])
 	return fmt.Sprintf("%s %s", formatted, unit)
 }
 
@@ -165,10 +162,6 @@ func (m Mass) findBestUnit() Unit {
 	default:
 		return PoundUnit
 	}
-}
-
-func format(value float64, precision int) string {
-	return strconv.FormatFloat(value, formatter, precision, bitSize)
 }
 
 func createFromMetric(grams float64) Mass {
