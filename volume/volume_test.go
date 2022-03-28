@@ -299,6 +299,38 @@ func TestVolume_Gallons(t *testing.T) {
 	}
 }
 
+func TestVolume_Ounces(t *testing.T) {
+	type fields struct {
+		system  measure.System
+		gallons float64
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   float64
+	}{
+		{
+			name: "Should return ounces properly",
+			fields: fields{
+				system:  measure.Imperial,
+				gallons: 1,
+			},
+			want: 160,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := Volume{
+				system:  tt.fields.system,
+				gallons: tt.fields.gallons,
+			}
+			if got := v.Ounces(); got != tt.want {
+				t.Errorf("Ounces() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestVolume_String(t *testing.T) {
 	type fields struct {
 		system  measure.System

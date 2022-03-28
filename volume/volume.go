@@ -13,6 +13,7 @@ const (
 
 	millilitersInLiters = 1000
 	litersInGallons     = 4.54609
+	ouncesInGallons     = 160
 )
 
 var (
@@ -62,6 +63,10 @@ func (v Volume) Liters() float64 {
 
 func (v Volume) Gallons() float64 {
 	return v.gallons
+}
+
+func (v Volume) Ounces() float64 {
+	return v.gallons * ouncesInGallons
 }
 
 func (v Volume) String() string {
