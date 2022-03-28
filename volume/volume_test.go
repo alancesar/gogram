@@ -129,6 +129,36 @@ func TestNewFromGallon(t *testing.T) {
 	}
 }
 
+func TestNewFromOunce(t *testing.T) {
+	type args struct {
+		value float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want Volume
+	}{
+		{
+			name: "Should parse from ounces",
+			args: args{
+				value: 160,
+			},
+			want: Volume{
+				system:  measure.Imperial,
+				liters:  4.54609,
+				gallons: 1,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewFromOunce(tt.args.value); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewFromOunce() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestNewFromString(t *testing.T) {
 	type args struct {
 		input string

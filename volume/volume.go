@@ -49,6 +49,10 @@ func NewFromGallon(value float64) Volume {
 	return createFromImperial(value)
 }
 
+func NewFromOunce(value float64) Volume {
+	return createFromImperial(value / ouncesInGallons)
+}
+
 func (v Volume) IsZero() bool {
 	return v.liters == 0 && v.gallons == 0
 }
