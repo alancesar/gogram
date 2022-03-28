@@ -464,6 +464,16 @@ func TestVolume_StringIn(t *testing.T) {
 			},
 			want: "1 gal",
 		},
+		{
+			name: "Should return empty string if unit is invalid",
+			fields: fields{
+				liters: 1,
+			},
+			args: args{
+				unit: "Invalid",
+			},
+			want: "",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -521,6 +531,17 @@ func TestVolume_Float64In(t *testing.T) {
 			},
 			want:    1,
 			wantErr: false,
+		},
+		{
+			name: "Should return error if unit is invalid",
+			fields: fields{
+				liters: 1,
+			},
+			args: args{
+				unit: "Invalid",
+			},
+			want:    0,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
