@@ -189,6 +189,13 @@ func TestNewFromString(t *testing.T) {
 			},
 			want: NewFromGallon(1),
 		},
+		{
+			name: "Should parse from '1 fl. Oz' string",
+			args: args{
+				input: "1 fl. Oz",
+			},
+			want: NewFromOunce(1),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -517,7 +524,7 @@ func TestVolume_StringIn(t *testing.T) {
 			want: "1000 ml",
 		},
 		{
-			name: "Should print 1 l",
+			name: "Should print 1 gal",
 			fields: fields{
 				4.54609,
 			},
@@ -525,6 +532,16 @@ func TestVolume_StringIn(t *testing.T) {
 				unit: GallonUnit,
 			},
 			want: "1 gal",
+		},
+		{
+			name: "Should print 160 fl. Oz",
+			fields: fields{
+				4.54609,
+			},
+			args: args{
+				unit: OunceUnit,
+			},
+			want: "160 fl. Oz",
 		},
 		{
 			name: "Should return empty string if unit is invalid",
@@ -592,6 +609,17 @@ func TestVolume_Float64In(t *testing.T) {
 				unit: GallonUnit,
 			},
 			want:    1,
+			wantErr: false,
+		},
+		{
+			name: "Should get 160 fl. Oz",
+			fields: fields{
+				liters: 4.54609,
+			},
+			args: args{
+				unit: OunceUnit,
+			},
+			want:    160,
 			wantErr: false,
 		},
 		{

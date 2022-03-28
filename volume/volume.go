@@ -10,6 +10,7 @@ const (
 	MilliliterUnit Unit = "ml"
 	LiterUnit      Unit = "l"
 	GallonUnit     Unit = "gal"
+	OunceUnit      Unit = "fl. Oz"
 
 	millilitersInLiters = 1000
 	litersInGallons     = 4.54609
@@ -21,6 +22,8 @@ var (
 		measure.Unit(MilliliterUnit): NewFromMilliliter,
 		measure.Unit(LiterUnit):      NewFromLiter,
 		measure.Unit(GallonUnit):     NewFromGallon,
+		"fl. oz":                     NewFromOunce,
+		"fl oz":                      NewFromOunce,
 	}
 )
 
@@ -95,6 +98,8 @@ func (v Volume) Float64In(unit Unit) (float64, error) {
 		return v.Liters(), nil
 	case GallonUnit:
 		return v.Gallons(), nil
+	case OunceUnit:
+		return v.Ounces(), nil
 	default:
 		return 0, fmt.Errorf("%s is an invalid unit for volume", unit)
 	}
