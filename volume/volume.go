@@ -12,7 +12,7 @@ const (
 	GallonUnit     Unit = "gal"
 
 	millilitersInLiters = 1000
-	gallonsInLiters     = 0.26417205235815
+	litersInGallons     = 4.54609
 )
 
 var (
@@ -118,14 +118,14 @@ func createFromMetric(liters float64) Volume {
 	return Volume{
 		system:  measure.Metric,
 		liters:  liters,
-		gallons: liters * gallonsInLiters,
+		gallons: liters / litersInGallons,
 	}
 }
 
 func createFromImperial(gallons float64) Volume {
 	return Volume{
 		system:  measure.Imperial,
-		liters:  gallons / gallonsInLiters,
+		liters:  gallons * litersInGallons,
 		gallons: gallons,
 	}
 }

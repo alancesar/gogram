@@ -23,18 +23,18 @@ func TestNewFromMilliliter(t *testing.T) {
 			want: Volume{
 				system:  measure.Metric,
 				liters:  1,
-				gallons: 0.26417205235815002,
+				gallons: 0.21996924829908776,
 			},
 		},
 		{
 			name: "Should parse from milliliters in one gallon equivalent",
 			args: args{
-				value: 3785.41,
+				value: 4546.09,
 			},
 			want: Volume{
 				system:  measure.Metric,
-				liters:  3.7854099999999997,
-				gallons: 0.9999995287170645,
+				liters:  4.54609,
+				gallons: 1,
 			},
 		},
 	}
@@ -64,18 +64,18 @@ func TestNewFromLiter(t *testing.T) {
 			want: Volume{
 				system:  measure.Metric,
 				liters:  10,
-				gallons: 2.6417205235815002,
+				gallons: 2.1996924829908777,
 			},
 		},
 		{
 			name: "Should parse from liters in one gallon equivalent",
 			args: args{
-				value: 3.78541,
+				value: 4.54609,
 			},
 			want: Volume{
 				system:  measure.Metric,
-				liters:  3.78541,
-				gallons: 0.9999995287170647,
+				liters:  4.54609,
+				gallons: 1,
 			},
 		},
 	}
@@ -104,19 +104,19 @@ func TestNewFromGallon(t *testing.T) {
 			},
 			want: Volume{
 				system:  measure.Imperial,
-				liters:  3.7854117839999772,
+				liters:  4.54609,
 				gallons: 1,
 			},
 		},
 		{
 			name: "Should parse from gallons in one liter equivalent",
 			args: args{
-				value: 0.26417205235815,
+				value: 0.21996924829908777,
 			},
 			want: Volume{
 				system:  measure.Imperial,
 				liters:  1,
-				gallons: 0.26417205235815,
+				gallons: 0.21996924829908777,
 			},
 		},
 	}
@@ -311,12 +311,12 @@ func TestVolume_String(t *testing.T) {
 		want   string
 	}{
 		{
-			name: "Should print 1.00 l",
+			name: "Should print 1 l",
 			fields: fields{
 				system: measure.Metric,
 				liters: 1,
 			},
-			want: "1.00 l",
+			want: "1 l",
 		},
 		{
 			name: "Should print 1 ml",
@@ -327,12 +327,12 @@ func TestVolume_String(t *testing.T) {
 			want: "1 ml",
 		},
 		{
-			name: "Should print 1.00 gal",
+			name: "Should print 1 gal",
 			fields: fields{
 				system:  measure.Imperial,
 				gallons: 1,
 			},
-			want: "1.00 gal",
+			want: "1 gal",
 		},
 	}
 	for _, tt := range tests {
@@ -366,7 +366,7 @@ func TestVolume_MarshalJSON(t *testing.T) {
 				system: measure.Metric,
 				liters: 100,
 			},
-			want:    []byte(`"100.00 l"`),
+			want:    []byte(`"100 l"`),
 			wantErr: false,
 		},
 	}
