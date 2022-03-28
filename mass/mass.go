@@ -92,6 +92,15 @@ func (m Mass) String() string {
 	return m.StringIn(unit)
 }
 
+func (m Mass) StringIn(unit Unit) string {
+	value, err := m.Float64In(unit)
+	if err != nil {
+		return ""
+	}
+	formatted := numeric.Format(value)
+	return fmt.Sprintf("%s %s", formatted, unit)
+}
+
 func (m Mass) Float64In(unit Unit) (float64, error) {
 	switch unit {
 	case Milligram:
@@ -107,15 +116,6 @@ func (m Mass) Float64In(unit Unit) (float64, error) {
 	default:
 		return 0, fmt.Errorf("%s is an invalid unit for mass", unit)
 	}
-}
-
-func (m Mass) StringIn(unit Unit) string {
-	value, err := m.Float64In(unit)
-	if err != nil {
-		return ""
-	}
-	formatted := numeric.Format(value)
-	return fmt.Sprintf("%s %s", formatted, unit)
 }
 
 func (m Mass) MarshalJSON() ([]byte, error) {
