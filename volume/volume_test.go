@@ -420,3 +420,120 @@ func TestVolume_UnmarshalJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestVolume_StringIn(t *testing.T) {
+	type fields struct {
+		liters float64
+	}
+	type args struct {
+		unit Unit
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "Should print 1 l",
+			fields: fields{
+				1,
+			},
+			args: args{
+				unit: LiterUnit,
+			},
+			want: "1 l",
+		},
+		{
+			name: "Should print 1000 ml",
+			fields: fields{
+				1,
+			},
+			args: args{
+				unit: MilliliterUnit,
+			},
+			want: "1000 ml",
+		},
+		{
+			name: "Should print 1 l",
+			fields: fields{
+				4.54609,
+			},
+			args: args{
+				unit: GallonUnit,
+			},
+			want: "1 gal",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := NewFromLiter(tt.fields.liters)
+			if got := v.StringIn(tt.args.unit); got != tt.want {
+				t.Errorf("StringIn() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVolume_Float64In(t *testing.T) {
+	type fields struct {
+		liters float64
+	}
+	type args struct {
+		unit Unit
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    float64
+		wantErr bool
+	}{
+		{
+			name: "Should get 1 l",
+			fields: fields{
+				liters: 1,
+			},
+			args: args{
+				unit: LiterUnit,
+			},
+			want:    1,
+			wantErr: false,
+		},
+		{
+			name: "Should get 1000 ml",
+			fields: fields{
+				liters: 1,
+			},
+			args: args{
+				unit: MilliliterUnit,
+			},
+			want:    1000,
+			wantErr: false,
+		},
+		{
+			name: "Should get 1 gal",
+			fields: fields{
+				liters: 4.54609,
+			},
+			args: args{
+				unit: GallonUnit,
+			},
+			want:    1,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := NewFromLiter(tt.fields.liters)
+			got, err := v.Float64In(tt.args.unit)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Float64In() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("Float64In() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -3,12 +3,13 @@ package volume
 import (
 	"fmt"
 	"github.com/alancesar/gogram/measure"
+	"github.com/alancesar/gogram/numeric"
 )
 
 const (
-	MilliliterUnit measure.Unit = "ml"
-	LiterUnit      measure.Unit = "l"
-	GallonUnit     measure.Unit = "gal"
+	MilliliterUnit Unit = "ml"
+	LiterUnit      Unit = "l"
+	GallonUnit     Unit = "gal"
 
 	millilitersInLiters = 1000
 	gallonsInLiters     = 0.26417205235815
@@ -16,13 +17,15 @@ const (
 
 var (
 	parsers = measure.ParseMap[Volume]{
-		MilliliterUnit: NewFromMilliliter,
-		LiterUnit:      NewFromLiter,
-		GallonUnit:     NewFromGallon,
+		measure.Unit(MilliliterUnit): NewFromMilliliter,
+		measure.Unit(LiterUnit):      NewFromLiter,
+		measure.Unit(GallonUnit):     NewFromGallon,
 	}
 )
 
 type (
+	Unit measure.Unit
+
 	Volume struct {
 		system          measure.System
 		liters, gallons float64
@@ -62,11 +65,30 @@ func (v Volume) Gallons() float64 {
 }
 
 func (v Volume) String() string {
-	if v.system == measure.Metric {
-		return v.metricString()
-	}
+	unit := v.findBestUnit()
+	return v.StringIn(unit)
+}
 
-	return v.imperialString()
+func (v Volume) StringIn(unit Unit) string {
+	value, err := v.Float64In(unit)
+	if err != nil {
+		return ""
+	}
+	formatted := numeric.Format(value)
+	return fmt.Sprintf("%s %s", formatted, unit)
+}
+
+func (v Volume) Float64In(unit Unit) (float64, error) {
+	switch unit {
+	case MilliliterUnit:
+		return v.Milliliters(), nil
+	case LiterUnit:
+		return v.Liters(), nil
+	case GallonUnit:
+		return v.Gallons(), nil
+	default:
+		return 0, fmt.Errorf("%s is an invalid unit for volume", unit)
+	}
 }
 
 func (v Volume) MarshalJSON() ([]byte, error) {
@@ -79,16 +101,17 @@ func (v *Volume) UnmarshalJSON(bytes []byte) error {
 	return nil
 }
 
-func (v Volume) metricString() string {
-	if v.liters < 1 {
-		return fmt.Sprintf("%.0f %s", v.Milliliters(), MilliliterUnit)
+func (v Volume) findBestUnit() Unit {
+	if v.system == measure.Metric {
+		switch {
+		case v.liters < 1:
+			return MilliliterUnit
+		default:
+			return LiterUnit
+		}
 	}
 
-	return fmt.Sprintf("%.2f %s", v.Liters(), LiterUnit)
-}
-
-func (v Volume) imperialString() string {
-	return fmt.Sprintf("%.2f %s", v.Gallons(), GallonUnit)
+	return GallonUnit
 }
 
 func createFromMetric(liters float64) Volume {
