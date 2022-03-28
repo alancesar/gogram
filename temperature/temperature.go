@@ -3,11 +3,12 @@ package temperature
 import (
 	"fmt"
 	"github.com/alancesar/gogram/measure"
+	"github.com/alancesar/gogram/numeric"
 )
 
 const (
-	CelsiusUnit    measure.Unit = "°C"
-	FahrenheitUnit measure.Unit = "°F"
+	Celsius    Unit = "°C"
+	Fahrenheit Unit = "°F"
 )
 
 var (
@@ -22,8 +23,10 @@ var (
 )
 
 type (
+	Unit measure.Unit
+
 	Temperature struct {
-		unit                measure.Unit
+		unit                Unit
 		celsius, fahrenheit float64
 	}
 )
@@ -34,7 +37,7 @@ func NewFromString(input string) Temperature {
 
 func NewFromCelsius(value float64) Temperature {
 	return Temperature{
-		unit:       CelsiusUnit,
+		unit:       Celsius,
 		celsius:    value,
 		fahrenheit: (value * 1.8) + 32,
 	}
@@ -42,7 +45,7 @@ func NewFromCelsius(value float64) Temperature {
 
 func NewFromFahrenheit(value float64) Temperature {
 	return Temperature{
-		unit:       FahrenheitUnit,
+		unit:       Fahrenheit,
 		celsius:    (value - 32) / 1.8,
 		fahrenheit: value,
 	}
@@ -61,11 +64,29 @@ func (t Temperature) Fahrenheit() float64 {
 }
 
 func (t Temperature) String() string {
-	if t.unit == CelsiusUnit {
-		return fmt.Sprintf("%.0f%s", t.Celsius(), CelsiusUnit)
+	unit := t.findBestUnit()
+	return t.StringIn(unit)
+}
+
+func (t Temperature) StringIn(unit Unit) string {
+	value, err := t.Float64In(unit)
+	if err != nil {
+		return ""
+	}
+	formatted := numeric.Format(value)
+	return fmt.Sprintf("%s%s", formatted, unit)
+}
+
+func (t Temperature) Float64In(unit Unit) (float64, error) {
+	switch unit {
+	case Celsius:
+		return t.Celsius(), nil
+	case Fahrenheit:
+		return t.Fahrenheit(), nil
+	default:
+		return 0, fmt.Errorf("%s is an invalid unit for temperature", unit)
 	}
 
-	return fmt.Sprintf("%.0f%s", t.Fahrenheit(), FahrenheitUnit)
 }
 
 func (t Temperature) MarshalJSON() ([]byte, error) {
@@ -76,4 +97,12 @@ func (t Temperature) MarshalJSON() ([]byte, error) {
 func (t *Temperature) UnmarshalJSON(bytes []byte) error {
 	*t = NewFromString(string(bytes))
 	return nil
+}
+
+func (t Temperature) findBestUnit() Unit {
+	if t.unit == Celsius {
+		return Celsius
+	}
+
+	return Fahrenheit
 }

@@ -1,7 +1,6 @@
 package temperature
 
 import (
-	"github.com/alancesar/gogram/measure"
 	"reflect"
 	"testing"
 )
@@ -21,7 +20,7 @@ func TestNewFromCelsius(t *testing.T) {
 				value: 50,
 			},
 			want: Temperature{
-				unit:       CelsiusUnit,
+				unit:       Celsius,
 				celsius:    50,
 				fahrenheit: 122,
 			},
@@ -51,7 +50,7 @@ func TestNewFromFahrenheit(t *testing.T) {
 				value: 68,
 			},
 			want: Temperature{
-				unit:       FahrenheitUnit,
+				unit:       Fahrenheit,
 				celsius:    20,
 				fahrenheit: 68,
 			},
@@ -152,12 +151,12 @@ func TestTemperature_IsZero(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t1 *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			temperature := Temperature{
 				celsius: tt.fields.celsius,
 			}
 			if got := temperature.IsZero(); got != tt.want {
-				t1.Errorf("IsZero() = %v, want %v", got, tt.want)
+				t.Errorf("IsZero() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -165,7 +164,7 @@ func TestTemperature_IsZero(t *testing.T) {
 
 func TestTemperature_Celsius(t *testing.T) {
 	type fields struct {
-		unit    measure.Unit
+		unit    Unit
 		celsius float64
 	}
 	tests := []struct {
@@ -182,13 +181,13 @@ func TestTemperature_Celsius(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t1 *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			temperature := Temperature{
 				unit:    tt.fields.unit,
 				celsius: tt.fields.celsius,
 			}
 			if got := temperature.Celsius(); got != tt.want {
-				t1.Errorf("Celsius() = %v, want %v", got, tt.want)
+				t.Errorf("Celsius() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -212,12 +211,12 @@ func TestTemperature_Fahrenheit(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t1 *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			temperature := Temperature{
 				fahrenheit: tt.fields.fahrenheit,
 			}
 			if got := temperature.Fahrenheit(); got != tt.want {
-				t1.Errorf("Fahrenheit() = %v, want %v", got, tt.want)
+				t.Errorf("Fahrenheit() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -225,7 +224,7 @@ func TestTemperature_Fahrenheit(t *testing.T) {
 
 func TestTemperature_String(t *testing.T) {
 	type fields struct {
-		unit       measure.Unit
+		unit       Unit
 		celsius    float64
 		fahrenheit float64
 	}
@@ -237,7 +236,7 @@ func TestTemperature_String(t *testing.T) {
 		{
 			name: "Should print 15°C",
 			fields: fields{
-				unit:    CelsiusUnit,
+				unit:    Celsius,
 				celsius: 15,
 			},
 			want: "15°C",
@@ -245,21 +244,21 @@ func TestTemperature_String(t *testing.T) {
 		{
 			name: "Should print 15°F",
 			fields: fields{
-				unit:       FahrenheitUnit,
+				unit:       Fahrenheit,
 				fahrenheit: 15,
 			},
 			want: "15°F",
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t1 *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			temperature := Temperature{
 				unit:       tt.fields.unit,
 				celsius:    tt.fields.celsius,
 				fahrenheit: tt.fields.fahrenheit,
 			}
 			if got := temperature.String(); got != tt.want {
-				t1.Errorf("String() = %v, want %v", got, tt.want)
+				t.Errorf("String() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -285,15 +284,15 @@ func TestTemperature_MarshalJSON(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t1 *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			temperature := NewFromCelsius(tt.fields.celsius)
 			got, err := temperature.MarshalJSON()
 			if (err != nil) != tt.wantErr {
-				t1.Errorf("MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t1.Errorf("MarshalJSON() got = %v, want %v", got, tt.want)
+				t.Errorf("MarshalJSON() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -319,14 +318,131 @@ func TestTemperature_UnmarshalJSON(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t1 *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			temp := &Temperature{}
 			if err := temp.UnmarshalJSON(tt.args.bytes); (err != nil) != tt.wantErr {
-				t1.Errorf("UnmarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("UnmarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
 			if !reflect.DeepEqual(*temp, tt.want) {
 				t.Errorf("MarshalJSON() got = %v, want %v", temp, tt.want)
+			}
+		})
+	}
+}
+
+func TestTemperature_StringIn(t *testing.T) {
+	type fields struct {
+		celsius float64
+	}
+	type args struct {
+		unit Unit
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "Should print 10°C",
+			fields: fields{
+				celsius: 10,
+			},
+			args: args{
+				unit: Celsius,
+			},
+			want: "10°C",
+		},
+		{
+			name: "Should print 50°F",
+			fields: fields{
+				celsius: 10,
+			},
+			args: args{
+				unit: Fahrenheit,
+			},
+			want: "50°F",
+		},
+		{
+			name: "Should print empty string for invalid unit",
+			fields: fields{
+				celsius: 10,
+			},
+			args: args{
+				unit: "Invalid",
+			},
+			want: "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			temperature := NewFromCelsius(tt.fields.celsius)
+			if got := temperature.StringIn(tt.args.unit); got != tt.want {
+				t.Errorf("StringIn() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestTemperature_Float64In(t *testing.T) {
+	type fields struct {
+		celsius float64
+	}
+	type args struct {
+		unit Unit
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    float64
+		wantErr bool
+	}{
+		{
+			name: "Should get 10°C",
+			fields: fields{
+				celsius: 10,
+			},
+			args: args{
+				unit: Celsius,
+			},
+			want:    10,
+			wantErr: false,
+		},
+		{
+			name: "Should get 50°F",
+			fields: fields{
+				celsius: 10,
+			},
+			args: args{
+				unit: Fahrenheit,
+			},
+			want:    50,
+			wantErr: false,
+		},
+		{
+			name: "Should get empty string for invalid unit",
+			fields: fields{
+				celsius: 10,
+			},
+			args: args{
+				unit: "Invalid",
+			},
+			want:    0,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			temperature := NewFromCelsius(tt.fields.celsius)
+			got, err := temperature.Float64In(tt.args.unit)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Float64In() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("Float64In() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
