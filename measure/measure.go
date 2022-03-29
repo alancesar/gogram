@@ -32,6 +32,8 @@ type (
 		fmt.Stringer
 		json.Marshaler
 		json.Unmarshaler
+
+		IsZero() bool
 	}
 )
 
