@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
+	"strconv"
 )
 
 const (
@@ -86,7 +87,6 @@ func (t Temperature) Float64In(unit Unit) (float64, error) {
 	default:
 		return 0, fmt.Errorf("%s is an invalid unit for temperature", unit)
 	}
-
 }
 
 func (t Temperature) MarshalJSON() ([]byte, error) {
@@ -95,7 +95,12 @@ func (t Temperature) MarshalJSON() ([]byte, error) {
 }
 
 func (t *Temperature) UnmarshalJSON(bytes []byte) error {
-	*t = NewFromString(string(bytes))
+	raw, err := strconv.Unquote(string(bytes))
+	if err != nil {
+		return err
+	}
+
+	*t = NewFromString(raw)
 	return nil
 }
 

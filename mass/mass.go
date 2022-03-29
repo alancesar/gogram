@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
+	"strconv"
 )
 
 const (
@@ -124,7 +125,12 @@ func (m Mass) MarshalJSON() ([]byte, error) {
 }
 
 func (m *Mass) UnmarshalJSON(bytes []byte) error {
-	*m = NewFromString(string(bytes))
+	raw, err := strconv.Unquote(string(bytes))
+	if err != nil {
+		return err
+	}
+
+	*m = NewFromString(raw)
 	return nil
 }
 

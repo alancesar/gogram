@@ -470,7 +470,7 @@ func TestVolume_UnmarshalJSON(t *testing.T) {
 		{
 			name: "Should unmarshall properly",
 			args: args{
-				bytes: []byte("100 l"),
+				bytes: []byte(`"100 l"`),
 			},
 			want:    NewFromLiter(100),
 			wantErr: false,

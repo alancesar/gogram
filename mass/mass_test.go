@@ -552,7 +552,7 @@ func TestMass_UnmarshalJSON(t *testing.T) {
 		{
 			name: "Should unmarshall properly",
 			args: args{
-				bytes: []byte("100 g"),
+				bytes: []byte(`"100 g"`),
 			},
 			want:    NewFromGram(100),
 			wantErr: false,

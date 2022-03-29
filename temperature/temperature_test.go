@@ -311,7 +311,7 @@ func TestTemperature_UnmarshalJSON(t *testing.T) {
 		{
 			name: "Should unmarshal properly",
 			args: args{
-				bytes: []byte("23ºC"),
+				bytes: []byte(`"23ºC"`),
 			},
 			want:    NewFromCelsius(23),
 			wantErr: false,
