@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	MilliliterUnit Unit = "ml"
-	LiterUnit      Unit = "l"
-	GallonUnit     Unit = "gal"
-	OunceUnit      Unit = "fl. Oz"
+	Milliliter Unit = "ml"
+	Liter      Unit = "l"
+	Gallon     Unit = "gal"
+	Ounce      Unit = "fl. Oz"
 
 	millilitersInLiters = 1000
 	litersInGallons     = 4.54609
@@ -19,17 +19,17 @@ const (
 )
 
 var (
-	parsers = measure.ParseMap[Volume]{
-		measure.Unit(MilliliterUnit): NewFromMilliliter,
-		measure.Unit(LiterUnit):      NewFromLiter,
-		measure.Unit(GallonUnit):     NewFromGallon,
-		"fl. oz":                     NewFromOunce,
-		"fl oz":                      NewFromOunce,
+	parsers = measure.ParserMap[Volume]{
+		"ml":     NewFromMilliliter,
+		"l":      NewFromLiter,
+		"gal":    NewFromGallon,
+		"fl. oz": NewFromOunce,
+		"fl oz":  NewFromOunce,
 	}
 )
 
 type (
-	Unit measure.Unit
+	Unit string
 
 	Volume struct {
 		system          measure.System
@@ -93,13 +93,13 @@ func (v Volume) StringIn(unit Unit) string {
 
 func (v Volume) Float64In(unit Unit) (float64, error) {
 	switch unit {
-	case MilliliterUnit:
+	case Milliliter:
 		return v.Milliliters(), nil
-	case LiterUnit:
+	case Liter:
 		return v.Liters(), nil
-	case GallonUnit:
+	case Gallon:
 		return v.Gallons(), nil
-	case OunceUnit:
+	case Ounce:
 		return v.Ounces(), nil
 	default:
 		return 0, fmt.Errorf("%s is an invalid unit for volume", unit)
@@ -125,13 +125,13 @@ func (v Volume) findBestUnit() Unit {
 	if v.system == measure.Metric {
 		switch {
 		case v.liters < 1:
-			return MilliliterUnit
+			return Milliliter
 		default:
-			return LiterUnit
+			return Liter
 		}
 	}
 
-	return GallonUnit
+	return Gallon
 }
 
 func createFromMetric(liters float64) Volume {

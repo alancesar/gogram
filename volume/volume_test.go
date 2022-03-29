@@ -509,7 +509,7 @@ func TestVolume_StringIn(t *testing.T) {
 				1,
 			},
 			args: args{
-				unit: LiterUnit,
+				unit: Liter,
 			},
 			want: "1 l",
 		},
@@ -519,7 +519,7 @@ func TestVolume_StringIn(t *testing.T) {
 				1,
 			},
 			args: args{
-				unit: MilliliterUnit,
+				unit: Milliliter,
 			},
 			want: "1000 ml",
 		},
@@ -529,7 +529,7 @@ func TestVolume_StringIn(t *testing.T) {
 				4.54609,
 			},
 			args: args{
-				unit: GallonUnit,
+				unit: Gallon,
 			},
 			want: "1 gal",
 		},
@@ -539,7 +539,7 @@ func TestVolume_StringIn(t *testing.T) {
 				4.54609,
 			},
 			args: args{
-				unit: OunceUnit,
+				unit: Ounce,
 			},
 			want: "160 fl. Oz",
 		},
@@ -584,7 +584,7 @@ func TestVolume_Float64In(t *testing.T) {
 				liters: 1,
 			},
 			args: args{
-				unit: LiterUnit,
+				unit: Liter,
 			},
 			want:    1,
 			wantErr: false,
@@ -595,7 +595,7 @@ func TestVolume_Float64In(t *testing.T) {
 				liters: 1,
 			},
 			args: args{
-				unit: MilliliterUnit,
+				unit: Milliliter,
 			},
 			want:    1000,
 			wantErr: false,
@@ -606,7 +606,7 @@ func TestVolume_Float64In(t *testing.T) {
 				liters: 4.54609,
 			},
 			args: args{
-				unit: GallonUnit,
+				unit: Gallon,
 			},
 			want:    1,
 			wantErr: false,
@@ -617,7 +617,7 @@ func TestVolume_Float64In(t *testing.T) {
 				liters: 4.54609,
 			},
 			args: args{
-				unit: OunceUnit,
+				unit: Ounce,
 			},
 			want:    160,
 			wantErr: false,

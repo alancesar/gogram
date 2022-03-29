@@ -22,17 +22,17 @@ const (
 )
 
 var (
-	parsers = measure.ParseMap[Mass]{
-		measure.Unit(Milligram): NewFromMilligram,
-		measure.Unit(Gram):      NewFromGram,
-		measure.Unit(Kilogram):  NewFromKilogram,
-		measure.Unit(Pound):     NewFromPound,
-		measure.Unit(Ounce):     NewFromOunce,
+	parsers = measure.ParserMap[Mass]{
+		"mg": NewFromMilligram,
+		"g":  NewFromGram,
+		"kg": NewFromKilogram,
+		"lb": NewFromPound,
+		"oz": NewFromOunce,
 	}
 )
 
 type (
-	Unit measure.Unit
+	Unit string
 
 	Mass struct {
 		system        measure.System

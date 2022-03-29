@@ -6,22 +6,32 @@ import (
 	"testing"
 )
 
+type fakeMeasurable string
+
+func (f fakeMeasurable) IsZero() bool {
+	return f != ""
+}
+
+var (
+	parseFn = func(value float64) fakeMeasurable {
+		return fakeMeasurable(fmt.Sprintf("%.2f", value))
+	}
+)
+
 func TestBuilderMap_Parse(t *testing.T) {
 	type args struct {
 		input string
 	}
 	tests := []struct {
 		name string
-		m    ParseMap[string]
+		m    ParserMap[fakeMeasurable]
 		args args
-		want string
+		want fakeMeasurable
 	}{
 		{
 			name: "Should parse properly",
-			m: ParseMap[string]{
-				"foo": func(value float64) string {
-					return fmt.Sprintf("%.2f", value)
-				},
+			m: ParserMap[fakeMeasurable]{
+				"foo": parseFn,
 			},
 			args: args{
 				input: "16 foo",
@@ -30,10 +40,8 @@ func TestBuilderMap_Parse(t *testing.T) {
 		},
 		{
 			name: "Should return empty if have an invalid value",
-			m: ParseMap[string]{
-				"foo": func(value float64) string {
-					return fmt.Sprintf("%.2f", value)
-				},
+			m: ParserMap[fakeMeasurable]{
+				"foo": parseFn,
 			},
 			args: args{
 				input: "x foo",
@@ -42,10 +50,8 @@ func TestBuilderMap_Parse(t *testing.T) {
 		},
 		{
 			name: "Should return empty if is an invalid pattern",
-			m: ParseMap[string]{
-				"foo": func(value float64) string {
-					return fmt.Sprintf("%.2f", value)
-				},
+			m: ParserMap[fakeMeasurable]{
+				"foo": parseFn,
 			},
 			args: args{
 				input: "bar 16",
@@ -54,10 +60,8 @@ func TestBuilderMap_Parse(t *testing.T) {
 		},
 		{
 			name: "Should return empty if have no symbol",
-			m: ParseMap[string]{
-				"foo": func(value float64) string {
-					return fmt.Sprintf("%.2f", value)
-				},
+			m: ParserMap[fakeMeasurable]{
+				"foo": parseFn,
 			},
 			args: args{
 				input: "16",

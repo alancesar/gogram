@@ -3,8 +3,6 @@ package measure
 //go:generate stringer -type=System
 
 import (
-	"encoding/json"
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -23,21 +21,17 @@ var (
 )
 
 type (
-	Parser[T any]   func(value float64) T
-	ParseMap[T any] map[Unit]Parser[T]
-	Unit            string
-	System          int
+	Parser[T Measurable]    func(value float64) T
+	ParserMap[T Measurable] map[string]Parser[T]
+
+	System int
 
 	Measurable interface {
-		fmt.Stringer
-		json.Marshaler
-		json.Unmarshaler
-
 		IsZero() bool
 	}
 )
 
-func (m ParseMap[T]) Parse(input string) T {
+func (m ParserMap[T]) Parse(input string) T {
 	var empty T
 
 	elements := regex.FindStringSubmatch(input)
@@ -48,7 +42,7 @@ func (m ParseMap[T]) Parse(input string) T {
 	unit := strings.ToLower(elements[unitIndex])
 	value, _ := strconv.ParseFloat(elements[valueIndex], 64)
 
-	if builder, ok := m[Unit(unit)]; !ok {
+	if builder, ok := m[unit]; !ok {
 		return empty
 	} else {
 		return builder(value)

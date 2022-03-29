@@ -13,7 +13,7 @@ const (
 )
 
 var (
-	parsers = measure.ParseMap[Temperature]{
+	parsers = measure.ParserMap[Temperature]{
 		"c":  NewFromCelsius,
 		"ºc": NewFromCelsius,
 		"°c": NewFromCelsius,
@@ -24,7 +24,7 @@ var (
 )
 
 type (
-	Unit measure.Unit
+	Unit string
 
 	Temperature struct {
 		unit                Unit
