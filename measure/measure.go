@@ -28,7 +28,7 @@ type (
 	Unit            string
 	System          int
 
-	Measure interface {
+	Measurable interface {
 		fmt.Stringer
 		json.Marshaler
 		json.Unmarshaler
