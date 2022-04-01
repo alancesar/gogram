@@ -8,6 +8,10 @@ import (
 
 type fakeMeasurable string
 
+func (f fakeMeasurable) String() string {
+	return string(f)
+}
+
 func (f fakeMeasurable) IsZero() bool {
 	return f != ""
 }
