@@ -5,7 +5,7 @@ import (
 	"github.com/alancesar/gogram/marshaller"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
-	"strconv"
+	"github.com/alancesar/gogram/unmarshaller"
 )
 
 const (
@@ -91,17 +91,11 @@ func (t Temperature) Float64In(unit Unit) (float64, error) {
 }
 
 func (t Temperature) MarshalJSON() ([]byte, error) {
-	return marshaller.FromStringer(t)
+	return marshaller.Marshal(t)
 }
 
 func (t *Temperature) UnmarshalJSON(bytes []byte) error {
-	raw, err := strconv.Unquote(string(bytes))
-	if err != nil {
-		return err
-	}
-
-	*t = NewFromString(raw)
-	return nil
+	return unmarshaller.Unmarshal(t, NewFromString, bytes)
 }
 
 func (t Temperature) findBestUnit() Unit {

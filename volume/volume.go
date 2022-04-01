@@ -5,7 +5,7 @@ import (
 	"github.com/alancesar/gogram/marshaller"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
-	"strconv"
+	"github.com/alancesar/gogram/unmarshaller"
 )
 
 const (
@@ -108,17 +108,11 @@ func (v Volume) Float64In(unit Unit) (float64, error) {
 }
 
 func (v Volume) MarshalJSON() ([]byte, error) {
-	return marshaller.FromStringer(v)
+	return marshaller.Marshal(v)
 }
 
 func (v *Volume) UnmarshalJSON(bytes []byte) error {
-	raw, err := strconv.Unquote(string(bytes))
-	if err != nil {
-		return err
-	}
-
-	*v = NewFromString(raw)
-	return nil
+	return unmarshaller.Unmarshal(v, NewFromString, bytes)
 }
 
 func (v Volume) findBestUnit() Unit {
