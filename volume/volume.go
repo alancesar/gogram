@@ -2,6 +2,7 @@ package volume
 
 import (
 	"fmt"
+	"github.com/alancesar/gogram/marshaller"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
 	"strconv"
@@ -107,8 +108,7 @@ func (v Volume) Float64In(unit Unit) (float64, error) {
 }
 
 func (v Volume) MarshalJSON() ([]byte, error) {
-	formatted := fmt.Sprintf(`"%s"`, v.String())
-	return []byte(formatted), nil
+	return marshaller.FromStringer(v)
 }
 
 func (v *Volume) UnmarshalJSON(bytes []byte) error {

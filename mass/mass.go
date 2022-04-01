@@ -2,6 +2,7 @@ package mass
 
 import (
 	"fmt"
+	"github.com/alancesar/gogram/marshaller"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
 	"strconv"
@@ -120,8 +121,7 @@ func (m Mass) Float64In(unit Unit) (float64, error) {
 }
 
 func (m Mass) MarshalJSON() ([]byte, error) {
-	formatted := fmt.Sprintf(`"%s"`, m.String())
-	return []byte(formatted), nil
+	return marshaller.FromStringer(m)
 }
 
 func (m *Mass) UnmarshalJSON(bytes []byte) error {

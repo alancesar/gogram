@@ -3,6 +3,7 @@ package measure
 //go:generate stringer -type=System
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -27,6 +28,7 @@ type (
 	System int
 
 	Measurable interface {
+		fmt.Stringer
 		IsZero() bool
 	}
 )

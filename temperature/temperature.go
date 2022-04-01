@@ -2,6 +2,7 @@ package temperature
 
 import (
 	"fmt"
+	"github.com/alancesar/gogram/marshaller"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
 	"strconv"
@@ -90,8 +91,7 @@ func (t Temperature) Float64In(unit Unit) (float64, error) {
 }
 
 func (t Temperature) MarshalJSON() ([]byte, error) {
-	formatted := fmt.Sprintf(`"%s"`, t.String())
-	return []byte(formatted), nil
+	return marshaller.FromStringer(t)
 }
 
 func (t *Temperature) UnmarshalJSON(bytes []byte) error {
