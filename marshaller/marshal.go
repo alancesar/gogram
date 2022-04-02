@@ -11,6 +11,10 @@ func Marshal(input measure.Measurable) ([]byte, error) {
 		return []byte(input.String()), nil
 	}
 
+	return MarshalWithQuotes(input)
+}
+
+func MarshalWithQuotes(input measure.Measurable) ([]byte, error) {
 	formatted := fmt.Sprintf(`"%s"`, input.String())
 	return []byte(formatted), nil
 }
