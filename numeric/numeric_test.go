@@ -55,3 +55,47 @@ func TestFormatWithPrecision(t *testing.T) {
 		})
 	}
 }
+
+func TestRound(t *testing.T) {
+	type args struct {
+		input   float64
+		decimal int
+	}
+	tests := []struct {
+		name string
+		args args
+		want float64
+	}{
+		{
+			name: "Should round to 10",
+			args: args{
+				input:   9.9,
+				decimal: 0,
+			},
+			want: 10,
+		},
+		{
+			name: "Should round to 9.9",
+			args: args{
+				input:   9.89,
+				decimal: 1,
+			},
+			want: 9.9,
+		},
+		{
+			name: "Should round to 9.99",
+			args: args{
+				input:   9.989,
+				decimal: 2,
+			},
+			want: 9.99,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Round(tt.args.input, tt.args.decimal); got != tt.want {
+				t.Errorf("Round() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
