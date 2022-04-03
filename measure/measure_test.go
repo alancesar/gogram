@@ -7,24 +7,25 @@ import (
 )
 
 type (
+	fakeMeasurable       string
 	fakeStringMeasurable string
 	fakeNumberMeasurable int
 )
 
-func (f fakeNumberMeasurable) String() string {
-	return fmt.Sprintf("%d", f)
-}
-
-func (f fakeNumberMeasurable) IsZero() bool {
-	return f == 0
+func (f fakeMeasurable) IsZero() bool {
+	return f != ""
 }
 
 func (f fakeStringMeasurable) String() string {
-	return string(f)
+	return fmt.Sprintf("%s implements Stringer", string(f))
 }
 
 func (f fakeStringMeasurable) IsZero() bool {
 	return f != ""
+}
+
+func (f fakeNumberMeasurable) IsZero() bool {
+	return f == 0
 }
 
 var (
@@ -104,9 +105,17 @@ func TestMarshal(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Should marshal as string",
+			name: "Should marshal as string using String() method",
 			args: args{
 				input: fakeStringMeasurable("abc"),
+			},
+			want:    []byte(`"abc implements Stringer"`),
+			wantErr: false,
+		},
+		{
+			name: "Should marshal as string",
+			args: args{
+				input: fakeMeasurable("abc"),
 			},
 			want:    []byte(`"abc"`),
 			wantErr: false,

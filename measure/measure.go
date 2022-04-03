@@ -3,7 +3,7 @@ package measure
 //go:generate stringer -type=System
 
 import (
-	"encoding/json"
+	"bytes"
 	"fmt"
 	"reflect"
 	"regexp"
@@ -55,16 +55,22 @@ func (m ParserMap[T]) Parse(input string) T {
 }
 
 func Marshal(input Measurable) ([]byte, error) {
-	if isNumeric(input) {
-		return json.Marshal(input)
-	}
-
 	if stringer, ok := input.(fmt.Stringer); ok {
 		formatted := fmt.Sprintf(`"%s"`, stringer.String())
 		return []byte(formatted), nil
 	}
 
-	return json.Marshal(input)
+	buffer := new(bytes.Buffer)
+	if _, err := fmt.Fprint(buffer, input); err != nil {
+		return nil, err
+	}
+
+	if isNumeric(input) {
+		return buffer.Bytes(), nil
+	}
+
+	quoted := strconv.Quote(buffer.String())
+	return []byte(quoted), nil
 }
 
 func Unmarshal[T Measurable](self *T, fromString func(input string) T, bytes []byte) error {
@@ -88,20 +94,20 @@ func isNumeric(input Measurable) bool {
 
 // Thanks https://github.com/shopspring/decimal
 func unquoteIfQuoted(value interface{}) (string, error) {
-	var bytes []byte
+	var raw []byte
 
 	switch v := value.(type) {
 	case string:
-		bytes = []byte(v)
+		raw = []byte(v)
 	case []byte:
-		bytes = v
+		raw = v
 	default:
 		return "", fmt.Errorf("could not convert value '%+v' to byte array of type '%T'", value, value)
 	}
 
-	if len(bytes) > 2 && bytes[0] == quotes && bytes[len(bytes)-1] == quotes {
-		bytes = bytes[1 : len(bytes)-1]
+	if len(raw) > 2 && raw[0] == quotes && raw[len(raw)-1] == quotes {
+		raw = raw[1 : len(raw)-1]
 	}
 
-	return string(bytes), nil
+	return string(raw), nil
 }
