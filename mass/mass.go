@@ -2,10 +2,8 @@ package mass
 
 import (
 	"fmt"
-	"github.com/alancesar/gogram/marshaller"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
-	"github.com/alancesar/gogram/unmarshaller"
 )
 
 const (
@@ -121,11 +119,11 @@ func (m Mass) Float64In(unit Unit) (float64, error) {
 }
 
 func (m Mass) MarshalJSON() ([]byte, error) {
-	return marshaller.Marshal(m)
+	return measure.Marshal(m)
 }
 
 func (m *Mass) UnmarshalJSON(bytes []byte) error {
-	return unmarshaller.Unmarshal(m, NewFromString, bytes)
+	return measure.Unmarshal(m, NewFromString, bytes)
 }
 
 func (m Mass) findBestUnit() Unit {

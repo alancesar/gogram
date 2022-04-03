@@ -2,10 +2,8 @@ package temperature
 
 import (
 	"fmt"
-	"github.com/alancesar/gogram/marshaller"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
-	"github.com/alancesar/gogram/unmarshaller"
 )
 
 const (
@@ -91,11 +89,11 @@ func (t Temperature) Float64In(unit Unit) (float64, error) {
 }
 
 func (t Temperature) MarshalJSON() ([]byte, error) {
-	return marshaller.Marshal(t)
+	return measure.Marshal(t)
 }
 
 func (t *Temperature) UnmarshalJSON(bytes []byte) error {
-	return unmarshaller.Unmarshal(t, NewFromString, bytes)
+	return measure.Unmarshal(t, NewFromString, bytes)
 }
 
 func (t Temperature) findBestUnit() Unit {

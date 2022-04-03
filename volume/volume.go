@@ -2,10 +2,8 @@ package volume
 
 import (
 	"fmt"
-	"github.com/alancesar/gogram/marshaller"
 	"github.com/alancesar/gogram/measure"
 	"github.com/alancesar/gogram/numeric"
-	"github.com/alancesar/gogram/unmarshaller"
 )
 
 const (
@@ -108,11 +106,11 @@ func (v Volume) Float64In(unit Unit) (float64, error) {
 }
 
 func (v Volume) MarshalJSON() ([]byte, error) {
-	return marshaller.Marshal(v)
+	return measure.Marshal(v)
 }
 
 func (v *Volume) UnmarshalJSON(bytes []byte) error {
-	return unmarshaller.Unmarshal(v, NewFromString, bytes)
+	return measure.Unmarshal(v, NewFromString, bytes)
 }
 
 func (v Volume) findBestUnit() Unit {
