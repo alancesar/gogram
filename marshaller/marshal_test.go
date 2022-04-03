@@ -69,47 +69,6 @@ func TestMarshal(t *testing.T) {
 	}
 }
 
-func TestMarshalWithQuotes(t *testing.T) {
-	type args struct {
-		input measure.Measurable
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    []byte
-		wantErr bool
-	}{
-		{
-			name: "Should marshal as string",
-			args: args{
-				input: fakeStringMeasure("abc"),
-			},
-			want:    []byte(`"abc"`),
-			wantErr: false,
-		},
-		{
-			name: "Should marshal as string event it's a number",
-			args: args{
-				input: fakeNumberMeasure(123),
-			},
-			want:    []byte(`"123"`),
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := MarshalWithQuotes(tt.args.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("MarshalWithQuotes() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("MarshalWithQuotes() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_isNumeric(t *testing.T) {
 	type args struct {
 		input measure.Measurable

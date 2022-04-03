@@ -1,6 +1,7 @@
 package marshaller
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/alancesar/gogram/measure"
 	"reflect"
@@ -8,15 +9,15 @@ import (
 
 func Marshal(input measure.Measurable) ([]byte, error) {
 	if isNumeric(input) {
-		return []byte(input.String()), nil
+		return json.Marshal(input)
 	}
 
-	return MarshalWithQuotes(input)
-}
+	if stringer, ok := input.(fmt.Stringer); ok {
+		formatted := fmt.Sprintf(`"%s"`, stringer.String())
+		return []byte(formatted), nil
+	}
 
-func MarshalWithQuotes(input measure.Measurable) ([]byte, error) {
-	formatted := fmt.Sprintf(`"%s"`, input.String())
-	return []byte(formatted), nil
+	return json.Marshal(input)
 }
 
 func isNumeric(input measure.Measurable) bool {
