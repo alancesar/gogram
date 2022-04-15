@@ -11,8 +11,8 @@ const (
 	bitSize          = 64
 )
 
-func Format(precision float64) string {
-	return FormatWithPrecision(precision, defaultPrecision)
+func Format(value float64) string {
+	return FormatWithPrecision(value, defaultPrecision)
 }
 
 func FormatWithPrecision(value float64, precision int) string {
